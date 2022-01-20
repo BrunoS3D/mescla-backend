@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["selectRelationCount"]
+}
+
+enum AuthProviders {
+  github
+  google
+  local
+}
+
+enum GuildRoles {
+  manager
+  mentor
+  participant
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  username     String        @unique
+  displayName  String?
+  email        String?       @unique
+  password     String?
+  authProvider AuthProviders
+  thirdPartyId String?
+  lastLoginAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  deletedAt    DateTime?
+  Member       Member[]
+  GuildInvite  GuildInvite[]
+}
+
+model Guild {
+  id          Int           @id @default(autoincrement())
+  slug        String        @unique
+  name        String
+  description String
+  startAt     DateTime
+  endAt       DateTime
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+  Member      Member[]
+  GuildInvite GuildInvite[]
+}
+
+model Member {
+  id               Int                @id @default(autoincrement())
+  userId           Int
+  user             User               @relation(fields: [userId], references: [id])
+  guildId          Int
+  guild            Guild              @relation(fields: [guildId], references: [id])
+  guildRole        GuildRoles
+  createdAt        DateTime           @default(now())
+  deletedAt        DateTime?
+  MentorshipRoom   MentorshipRoom[]
+  MentorRoomMember MentorRoomMember[]
+}
+
+model GuildInvite {
+  id        Int        @id @default(autoincrement())
+  guildId   Int
+  guild     Guild      @relation(fields: [guildId], references: [id])
+  guildRole GuildRoles
+  createdAt DateTime   @default(now())
+  deletedAt DateTime?
+  code      String     @unique @default(dbgenerated("substr(md5(random()::text), 0, 8)")) @db.VarChar(8)
+  User      User?      @relation(fields: [userId], references: [id])
+  userId    Int?
+}
+
+model MentorshipRoom {
+  id               Int                @id @default(autoincrement())
+  mentorId         Int
+  mentor           Member             @relation(fields: [mentorId], references: [id])
+  meetSlug         String             @unique
+  startAt          DateTime
+  endAt            DateTime
+  createdAt        DateTime           @default(now())
+  deletedAt        DateTime?
+  MentorRoomMember MentorRoomMember[]
+}
+
+model MentorRoomMember {
+  id        Int            @id @default(autoincrement())
+  memberId  Int
+  member    Member         @relation(fields: [memberId], references: [id])
+  roomId    Int
+  room      MentorshipRoom @relation(fields: [roomId], references: [id])
+  createdAt DateTime       @default(now())
+  deletedAt DateTime?
+}

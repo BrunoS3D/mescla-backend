@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  mescla:
+    container_name: mescla
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    depends_on:
+      - mescla-db
+    env_file:
+      - .env
+
+  mescla-db:
+    image: postgres:13
+    container_name: mescla-db
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - mescla-db:/var/lib/postgresql/data
+
+volumes:
+  mescla-db:
+    name: mescla-db
