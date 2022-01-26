@@ -1,20 +1,21 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 
 import { AuthModule } from './auth/auth.module';
-import { CampaignsModule } from './campaigns/campaigns.module';
 import { UsersModule } from './users/users.module';
+import { GuildInvitesModule } from './guild-invites/guild-invites.module';
+import { GuildMembersModule } from './guild-members/guild-members.module';
+import { GuildsModule } from './guilds/guilds.module';
 
 import { ApiController } from './api.controller';
-import { UserCampaignsModule } from './user-campaigns/user-campaigns.module';
-import { EventsModule } from './events/events.module';
 
+@Global()
 @Module({
   imports: [
     AuthModule,
-    CampaignsModule,
     UsersModule,
-    UserCampaignsModule,
-    EventsModule,
+    GuildsModule,
+    GuildMembersModule,
+    GuildInvitesModule,
   ],
   controllers: [ApiController],
 })

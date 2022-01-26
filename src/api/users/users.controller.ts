@@ -10,15 +10,16 @@ import {
   UseInterceptors,
   ParseIntPipe,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { User } from '@prisma/client';
 
 // import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 
+import { UsersService } from './users.service';
 import { UserEntity } from './entities/user.entity';
-import { AuthenticatedUser } from '@/decorators/user';
-import { User } from '@prisma/client';
-import { RequiresAuth } from '@/decorators/requires-auth';
+
+import { RequiresAuth } from '@/decorators/auth/auth.decorator';
+import { AuthenticatedUser } from '@/decorators/user/user.decorator';
 
 @RequiresAuth()
 @UseInterceptors(ClassSerializerInterceptor)

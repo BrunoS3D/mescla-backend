@@ -1,4 +1,4 @@
-import { AuthProviders, GuildRoles } from '@prisma/client';
+import { AuthProviders } from '@prisma/client';
 import {
   IsEmail,
   IsNotEmpty,
@@ -27,6 +27,11 @@ export class CreateUserDto {
   @MinLength(8)
   @IsString()
   password?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  avatarUrl?: string;
 
   @IsEnum(AuthProviders)
   authProvider!: AuthProviders;

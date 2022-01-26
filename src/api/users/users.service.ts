@@ -2,10 +2,11 @@ import { validateOrReject } from 'class-validator';
 import { Injectable, Logger } from '@nestjs/common';
 import { AuthProviders, User } from '@prisma/client';
 
+import { PrismaService } from '@/prisma/prisma.service';
+import { PasswordService } from '@api/password/password.service';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from '@/prisma/prisma.service';
-import { PasswordService } from '../password/password.service';
 
 @Injectable()
 export class UsersService {

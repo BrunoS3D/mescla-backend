@@ -27,6 +27,7 @@ model User {
   id           Int           @id @default(autoincrement())
   username     String        @unique
   displayName  String?
+  avatarUrl    String?
   email        String?       @unique
   password     String?
   authProvider AuthProviders
@@ -35,25 +36,23 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   deletedAt    DateTime?
-  Member       Member[]
+  GuildMember  GuildMember[]
   GuildInvite  GuildInvite[]
 }
 
 model Guild {
   id          Int           @id @default(autoincrement())
-  slug        String        @unique
+  slug        String        @unique @db.VarChar(28)
   name        String
   description String
-  startAt     DateTime
-  endAt       DateTime
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?
-  Member      Member[]
+  GuildMember GuildMember[]
   GuildInvite GuildInvite[]
 }
 
-model Member {
+model GuildMember {
   id               Int                @id @default(autoincrement())
   userId           Int
   user             User               @relation(fields: [userId], references: [id])
@@ -81,7 +80,7 @@ model GuildInvite {
 model MentorshipRoom {
   id               Int                @id @default(autoincrement())
   mentorId         Int
-  mentor           Member             @relation(fields: [mentorId], references: [id])
+  mentor           GuildMember        @relation(fields: [mentorId], references: [id])
   meetSlug         String             @unique
   startAt          DateTime
   endAt            DateTime
@@ -93,7 +92,7 @@ model MentorshipRoom {
 model MentorRoomMember {
   id        Int            @id @default(autoincrement())
   memberId  Int
-  member    Member         @relation(fields: [memberId], references: [id])
+  member    GuildMember    @relation(fields: [memberId], references: [id])
   roomId    Int
   room      MentorshipRoom @relation(fields: [roomId], references: [id])
   createdAt DateTime       @default(now())

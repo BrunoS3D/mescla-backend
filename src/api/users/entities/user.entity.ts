@@ -20,8 +20,6 @@ export class UserEntity {
 
   thirdPartyId!: string | null;
 
-  pubref!: string;
-
   @Exclude()
   lastLoginAt!: Date | null;
 

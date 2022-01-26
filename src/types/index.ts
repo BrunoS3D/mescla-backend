@@ -1,3 +1,13 @@
+export type Cursor = {
+  page: number;
+  limit: number;
+};
+
+export type Paginate<T> = Cursor & {
+  pageCount: number;
+  data: T[];
+};
+
 export type GitHubProfile = {
   id: string;
   nodeId: string;

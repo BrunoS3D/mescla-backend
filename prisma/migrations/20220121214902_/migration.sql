@@ -9,6 +9,7 @@ CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
     "displayName" TEXT,
+    "avatarUrl" TEXT,
     "email" TEXT,
     "password" TEXT,
     "authProvider" "AuthProviders" NOT NULL,
@@ -27,8 +28,6 @@ CREATE TABLE "Guild" (
     "slug" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "startAt" TIMESTAMP(3) NOT NULL,
-    "endAt" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
@@ -37,7 +36,7 @@ CREATE TABLE "Guild" (
 );
 
 -- CreateTable
-CREATE TABLE "Member" (
+CREATE TABLE "GuildMember" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "guildId" INTEGER NOT NULL,
@@ -101,10 +100,10 @@ CREATE UNIQUE INDEX "GuildInvite.code_unique" ON "GuildInvite"("code");
 CREATE UNIQUE INDEX "MentorshipRoom.meetSlug_unique" ON "MentorshipRoom"("meetSlug");
 
 -- AddForeignKey
-ALTER TABLE "Member" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "GuildMember" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Member" ADD FOREIGN KEY ("guildId") REFERENCES "Guild"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "GuildMember" ADD FOREIGN KEY ("guildId") REFERENCES "Guild"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "GuildInvite" ADD FOREIGN KEY ("guildId") REFERENCES "Guild"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -113,10 +112,10 @@ ALTER TABLE "GuildInvite" ADD FOREIGN KEY ("guildId") REFERENCES "Guild"("id") O
 ALTER TABLE "GuildInvite" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MentorshipRoom" ADD FOREIGN KEY ("mentorId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "MentorshipRoom" ADD FOREIGN KEY ("mentorId") REFERENCES "GuildMember"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MentorRoomMember" ADD FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "MentorRoomMember" ADD FOREIGN KEY ("memberId") REFERENCES "GuildMember"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "MentorRoomMember" ADD FOREIGN KEY ("roomId") REFERENCES "MentorshipRoom"("id") ON DELETE CASCADE ON UPDATE CASCADE;
